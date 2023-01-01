@@ -1,6 +1,7 @@
 import { RequestContext } from "@mikro-orm/core";
 import { UserEntity } from "./user.entity";
 import { bcryptService } from "../security/bcrypt.service";
+import { jwtService } from '../security/jwt.service';
 
 export class UsersService {
   private get repo() {
@@ -17,11 +18,11 @@ export class UsersService {
         email,
         password: await bcryptService.hash(password),
       },
-      { persist: true }
+      { persist: true, managed: true }
     );
-    this.repo.flush();
+    await this.repo.flush();
     // TODO: handle unqie constraint errors
-    // TODO: save the password hash (not directly)
+    user.token = await jwtService.createToken(user.id);
     return user;
   }
 
@@ -37,6 +38,7 @@ export class UsersService {
     if (!isPasswordValid) {
       throw new Error("Invalid password");
     }
+    user!!.token = await jwtService.createToken(user!!.id);
     return user!!;
   }
 }

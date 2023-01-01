@@ -1,9 +1,13 @@
-import { Entity, PrimaryKey, Property, SerializedPrimaryKey } from '@mikro-orm/core';
-
+import {
+  Entity,
+  PrimaryKey,
+  Property,
+  SerializedPrimaryKey,
+} from "@mikro-orm/core";
 
 @Entity()
 export class UserEntity {
-  @PrimaryKey({ type: 'number', autoincrement: true })
+  @PrimaryKey({ type: "number", autoincrement: true })
   id!: number;
 
   @Property({ unique: true, nullable: false })
@@ -14,5 +18,7 @@ export class UserEntity {
 
   @Property({ nullable: false, hidden: true })
   password!: string;
-  
+
+  @Property({ persist: false })
+  token?: string;
 }
