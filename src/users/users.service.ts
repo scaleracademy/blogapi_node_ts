@@ -41,4 +41,12 @@ export class UsersService {
     user!!.token = await jwtService.createToken(user!!.id);
     return user!!;
   }
+
+  async getUserById(id: number): Promise<UserEntity> {
+    const user = await this.repo.findOne(id);
+    if (user === undefined) {
+      throw new Error("User not found");
+    }
+    return user!!;
+  }
 }

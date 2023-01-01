@@ -1,4 +1,4 @@
-import { SignJWT, jwtDecrypt } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 
 const SECRET = new TextEncoder().encode(
   // TODO: save it in config / .env file and do not commit to git
@@ -18,11 +18,16 @@ export const jwtService = {
   },
 
   async decodeToken(token: string): Promise<number> {
-    // TODO: handle decription errors
-    const tokenData = await jwtDecrypt(token, SECRET);
-    if (!tokenData.payload.sub) {
-      throw new Error("Invalid token");
+    let sub;
+    try {
+      const tokenData = await jwtVerify(token, SECRET);
+      sub = tokenData.payload.sub;
+    } catch (err) {
+      throw new Error("Token validation failed");
     }
-    return parseInt(tokenData.payload.sub);
+    if (!sub) {
+      throw new Error("Invalid token data");
+    }
+    return parseInt(sub);
   },
 };
