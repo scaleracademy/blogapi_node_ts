@@ -12,7 +12,7 @@ export class UserEntity {
   @Property({ unique: true, nullable: false })
   email!: string;
 
-  @Property({ nullable: false })
+  @Property({ nullable: false, hidden: true })
   password!: string;
   
 }

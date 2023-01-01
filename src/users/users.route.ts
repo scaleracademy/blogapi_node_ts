@@ -11,15 +11,28 @@ const usersService = new UsersService();
 route.post("/", async (req, res) => {
   const { username, email, password } = req.body;
   // TODO: validate username, email, password exists
-  
-  const user = await usersService.createUser(username, email, password);
-  res.status(201).json(user);
+
+  try {
+    const user = await usersService.createUser(username, email, password);
+    res.status(201).json(user);
+  } catch (err) {
+    res.status(400).json({ message: (err as Error).message });
+  }
 });
 
 /**
  * POST /users/login
  * login a user
  */
-route.post("/login", (req, res) => {});
+route.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await usersService.verifyUser(username, password);
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(404).json({ message: (err as Error).message });
+  }
+});
 
 export const usersRoute = route;
