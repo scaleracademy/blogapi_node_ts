@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { reqdAuth } from "../security/auth.middleware";
 import { ArticlesService } from "./articles.service";
+import { populateArticleFromSlug } from "./article-slug.middleware";
 
 const route = Router();
 
@@ -23,14 +24,8 @@ route.get("/", async (req, res) => {
  * GET /articles/:slug
  * get an article by slug
  */
-route.get("/:slug", async (req, res) => {
-  const { slug } = req.params;
-  const article = await articlesService.getArticleBySlug(slug);
-  if (!article) {
-    res.status(404).send({ message: "Article not found" });
-    return;
-  }
-  res.status(200).json(article);
+route.get("/:slug", populateArticleFromSlug, async (req, res) => {
+  res.status(200).json(req.article!!);
 });
 
 /**

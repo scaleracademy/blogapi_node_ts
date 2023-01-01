@@ -3,6 +3,7 @@ import { initORM } from "./db/orm.init";
 import { RequestContext } from "@mikro-orm/core";
 import { usersRoute } from "./users/users.route";
 import { articlesRoute } from "./articles/articles.route";
+import { commentsRoute } from './comments/comments.route';
 
 const app = express();
 
@@ -18,6 +19,7 @@ async function start() {
 
   app.use("/users", usersRoute);
   app.use("/articles", articlesRoute);
+  app.use("/articles/:slug/comments", commentsRoute);
 
   app.listen(8181, () => {
     console.log("Server is running on http://localhost:8181");

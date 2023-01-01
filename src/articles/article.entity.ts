@@ -35,6 +35,9 @@ export class ArticleEntity {
   @Property({ onCreate: () => new Date() })
   createdAt?: Date;
 
+  @Property({ onUpdate: () => new Date() })
+  updatedAt?: Date;
+
   @Property({ type: "array", nullable: true })
   tags: string[] = []; // TODO: add tags
 }
